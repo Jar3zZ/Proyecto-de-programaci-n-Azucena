@@ -1,25 +1,20 @@
 {
-  "name": "Mi Perfil Digital App",
-  "short_name": "MiPerfil",
-  "start_url": "index.html",
+  "name": "Portal de Evidencias",
+  "short_name": "Evidencias",
+  "start_url": "./",
   "display": "standalone",
-  "background_color": "#121212",
-  "theme_color": "#007bff",
-  "orientation": "portrait",
+  "background_color": "#f7f5f1",
+  "theme_color": "#292824",
   "icons": [
     {
-      "src": "https://cdn-icons-png.flaticon.com/512/2950/2950664.png",
+      "src": "img/icon-192.png",
       "sizes": "192x192",
-      "type": "image/png",
-      "purpose": "any"
+      "type": "image/png"
     },
     {
-      "src": "https://cdn-icons-png.flaticon.com/512/2950/2950664.png",
+      "src": "img/icon-512.png",
       "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "any"
+      "type": "image/png"
     }
-  
-    
   ]
 }
