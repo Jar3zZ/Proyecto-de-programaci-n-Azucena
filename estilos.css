@@ -57,3 +57,30 @@ body.logged-out .app-layout,body.logged-out .mobile-nav{display:none}
 @media(max-width:760px){.auth-card{padding:26px 22px}.auth-brand{margin-bottom:30px}.auth-heading h1{font-size:24px}.logout-button{font-size:9px;padding:7px 8px}}
 
 .auth-screen[hidden]{display:none}
+
+
+/* Control de pantallas de acceso: evita mostrar el portal detrás del formulario. */
+[hidden] { display: none !important; }
+.auth-screen {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  min-height: 100vh;
+  overflow-y: auto;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  background: radial-gradient(circle at 15% 15%, #eee7dd 0, transparent 35%), var(--paper, #f8f7f4);
+}
+.auth-card {
+  width: min(440px, 100%);
+  margin: auto;
+  background: #fff;
+  border: 1px solid var(--line, #ebe8e2);
+  border-radius: 22px;
+  padding: 34px;
+  box-shadow: 0 20px 60px rgba(41, 40, 36, .08);
+}
+.auth-form { display: grid; gap: 15px; }
+.auth-form[hidden], .auth-screen[hidden], #appShell[hidden], .mobile-nav[hidden] { display: none !important; }
+@media (max-width: 520px) { .auth-card { padding: 26px 22px; } }

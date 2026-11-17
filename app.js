@@ -202,6 +202,8 @@ function loadUserData() {
   if (!profile.name && currentUser?.name) profile.name = currentUser.name;
   document.body.classList.remove("logged-out");
   document.getElementById("authScreen").hidden = true;
+  document.getElementById("appShell").hidden = false;
+  document.querySelector(".mobile-nav").hidden = false;
   loadProfile();
   renderAll();
 }
@@ -269,12 +271,16 @@ document.getElementById("logoutButton").addEventListener("click", () => {
   evidences = [];
   profile = {};
   document.getElementById("authScreen").hidden = false;
+  document.getElementById("appShell").hidden = true;
+  document.querySelector(".mobile-nav").hidden = true;
   document.body.classList.add("logged-out");
   document.getElementById("loginForm").reset();
   showAuthMode("login");
 });
 function initAuth() {
   document.body.classList.add("logged-out");
+  document.getElementById("appShell").hidden = true;
+  document.querySelector(".mobile-nav").hidden = true;
   const users = readStorage(USERS_KEY, {});
   const hasAccounts = Object.keys(users).length > 0;
 
