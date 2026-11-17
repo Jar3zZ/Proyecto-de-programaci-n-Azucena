@@ -5,7 +5,6 @@ const CATEGORY_INFO = {
   certificados: { label: "Certificados", icon: "✧", tone: "rose" }
 };
 const USERS_KEY = "portalUsuarios_v1";
-const SESSION_KEY = "portalSesion_v1";
 const EVIDENCE_KEY = "portalEvidencias_v1";
 const PROFILE_KEY = "portalPerfil_v1";
 let currentUser = null;
@@ -188,6 +187,7 @@ function showAuthMode(mode) {
   document.getElementById("registerForm").hidden = !registering;
   document.getElementById("authTitle").textContent = registering ? "Crea tu cuenta" : "Bienvenido de nuevo";
   document.getElementById("authSubtitle").textContent = registering ? "Regístrate para comenzar a organizar tus evidencias." : "Inicia sesión para consultar y organizar tus evidencias.";
+  document.getElementById("authSwitch").hidden = false;
   document.getElementById("authSwitch").innerHTML = registering ? '¿Ya tienes una cuenta? <button type="button" id="showLogin">Iniciar sesión</button>' : '¿No tienes una cuenta? <button type="button" id="showRegister">Crear cuenta</button>';
   document.getElementById("loginError").textContent = "";
   document.getElementById("registerError").textContent = "";
@@ -207,7 +207,8 @@ function loadUserData() {
 }
 function enterApp(user) {
   currentUser = user;
-  localStorage.setItem(SESSION_KEY, user.email);
+  // La sesión solo vive mientras la página permanece abierta.
+  // La cuenta y las evidencias sí permanecen guardadas en este navegador.
   loadUserData();
   showToast(`Bienvenido/a, ${user.name || user.email}`);
 }
@@ -264,7 +265,6 @@ document.getElementById("registerForm").addEventListener("submit", async event =
   enterApp(user);
 });
 document.getElementById("logoutButton").addEventListener("click", () => {
-  localStorage.removeItem(SESSION_KEY);
   currentUser = null;
   evidences = [];
   profile = {};
@@ -275,9 +275,18 @@ document.getElementById("logoutButton").addEventListener("click", () => {
 });
 function initAuth() {
   document.body.classList.add("logged-out");
-  const email = localStorage.getItem(SESSION_KEY);
   const users = readStorage(USERS_KEY, {});
-  if (email && users[email]) enterApp(users[email]);
-  else showAuthMode("login");
+  const hasAccounts = Object.keys(users).length > 0;
+
+  if (hasAccounts) {
+    // Si ya existe una cuenta en este navegador, solicitar inicio de sesión.
+    showAuthMode("login");
+  } else {
+    // Primera visita: mostrar directamente el formulario para crear la cuenta.
+    showAuthMode("register");
+    document.getElementById("authTitle").textContent = "Crea tu primera cuenta";
+    document.getElementById("authSubtitle").textContent = "Registra tus datos para comenzar a organizar tus evidencias en este dispositivo.";
+    document.getElementById("authSwitch").hidden = true;
+  }
 }
 initAuth();

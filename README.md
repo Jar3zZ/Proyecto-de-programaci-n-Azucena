@@ -21,3 +21,11 @@ Abre `index.html` en un navegador. Para una prueba local también puedes usar la
 ## Importante sobre los datos
 Esta es una primera versión estática. Los registros, perfil y archivos adjuntos se guardan en el almacenamiento local del navegador/dispositivo, no en una base de datos central. Por eso no se sincronizan automáticamente entre celular y computadora; si borras los datos del navegador, puedes perderlos. GitHub Pages publica los archivos del sitio, pero no procesa C# ni ofrece una base de datos.
 No subas información sensible ni identificaciones personales a un repositorio público. Para sincronización real entre dispositivos se necesita agregar un servicio de autenticación y base de datos.
+
+## Flujo de acceso local
+
+- En la primera visita, si no hay cuentas guardadas en el navegador, se muestra directamente el formulario para crear la primera cuenta.
+- Después de crearla, la cuenta y las evidencias se guardan en LocalStorage del mismo navegador y dispositivo.
+- En visitas posteriores se solicita iniciar sesión con el correo y la contraseña registrados.
+- Al actualizar o cerrar la página, la sesión no se conserva; será necesario iniciar sesión nuevamente.
+- No hay sincronización entre navegadores o dispositivos. Esta autenticación local es solo para demostración académica y no protege información sensible.
