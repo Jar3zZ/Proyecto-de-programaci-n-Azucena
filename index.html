@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#292824">
+  <meta name="description" content="Organiza y consulta tus evidencias académicas.">
+  <title>Portal de Evidencias</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/estilos.css">
+</head>
+<body>
+  <div class="app-layout">
+    <aside class="sidebar">
+      <a class="brand" href="#" data-section="inicio" aria-label="Ir al inicio">
+        <span class="brand-logo">PE</span>
+        <span class="brand-name">Portal de<small>Evidencias</small></span>
+      </a>
+      <div class="side-label">ESPACIO PERSONAL</div>
+      <nav class="side-nav" aria-label="Navegación principal">
+        <button class="nav-link active" data-section="inicio"><span>⌂</span> Inicio</button>
+        <button class="nav-link" data-section="cientifica"><span>⚗</span> Evidencia científica</button>
+        <button class="nav-link" data-section="academica"><span>▤</span> Formación académica</button>
+        <button class="nav-link" data-section="extracurricular"><span>♧</span> Formación extracurricular</button>
+        <button class="nav-link" data-section="certificados"><span>✧</span> Certificados</button>
+        <button class="nav-link" data-section="perfil"><span>◉</span> Mi perfil</button>
+      </nav>
+      <div class="sidebar-bottom">
+        <div class="privacy-note"><span>✦</span><div><strong>Tu espacio, a tu ritmo</strong><small>Organiza tus logros en un solo lugar.</small></div></div>
+        <small class="version">PORTAL DE EVIDENCIAS · 1.0</small>
+      </div>
+    </aside>
+
+    <main class="main-area">
+      <header class="topbar">
+        <button class="mobile-brand" data-section="inicio"><span class="brand-logo">PE</span><strong>Portal de Evidencias</strong></button>
+        <div class="breadcrumb" id="breadcrumb">Mi espacio <span>/</span> Inicio</div>
+        <div class="top-actions">
+          <span class="date-label" id="todayLabel"></span>
+          <button class="avatar-button" data-section="perfil" aria-label="Abrir perfil">S</button>
+        </div>
+      </header>
+
+      <div class="content-wrap">
+        <section class="view active" id="view-inicio">
+          <div class="welcome-panel">
+            <div class="welcome-copy">
+              <span class="eyebrow">TU TRAYECTORIA, EN UN SOLO LUGAR</span>
+              <h1>Bienvenido/a a tu<br><em>Portal de Evidencias.</em></h1>
+              <p>Guarda tus experiencias, reconoce tus avances y mantén tus logros organizados.</p>
+              <button class="primary-button" id="welcomeAdd">＋ Agregar evidencia</button>
+            </div>
+            <div class="welcome-art" aria-hidden="true">
+              <div class="art-circle circle-one"></div><div class="art-circle circle-two"></div>
+              <div class="paper-card"><span class="paper-icon">✧</span><strong>Mis logros</strong><small>Ideas que se convierten<br>en experiencias.</small><div class="paper-lines"><i></i><i></i><i></i></div></div>
+              <span class="art-spark spark-one">✳</span><span class="art-spark spark-two">✦</span>
+            </div>
+          </div>
+
+          <div class="section-heading">
+            <div><span class="eyebrow">RESUMEN GENERAL</span><h2>Tu espacio de trabajo</h2></div>
+            <button class="text-button" data-section="perfil">Ver mi perfil →</button>
+          </div>
+          <div class="stats-grid">
+            <article class="stat-card"><span class="stat-icon lavender">▧</span><div><span class="stat-number" id="totalCount">0</span><span class="stat-label">Evidencias guardadas</span></div></article>
+            <article class="stat-card"><span class="stat-icon sage">⚗</span><div><span class="stat-number" id="scienceCount">0</span><span class="stat-label">Científicas</span></div></article>
+            <article class="stat-card"><span class="stat-icon sand">▤</span><div><span class="stat-number" id="academicCount">0</span><span class="stat-label">Académicas</span></div></article>
+            <article class="stat-card"><span class="stat-icon rose">✧</span><div><span class="stat-number" id="certificateCount">0</span><span class="stat-label">Certificados</span></div></article>
+          </div>
+
+          <div class="section-heading category-heading">
+            <div><span class="eyebrow">EXPLORA TUS CATEGORÍAS</span><h2>¿Qué deseas consultar?</h2></div>
+          </div>
+          <div class="category-grid">
+            <button class="category-card cat-science" data-section="cientifica"><span class="category-symbol">⚗</span><span><strong>Evidencia científica</strong><small>Investigaciones y proyectos</small></span><b>↗</b></button>
+            <button class="category-card cat-academic" data-section="academica"><span class="category-symbol">▤</span><span><strong>Formación académica</strong><small>Trabajos y actividades escolares</small></span><b>↗</b></button>
+            <button class="category-card cat-extra" data-section="extracurricular"><span class="category-symbol">♧</span><span><strong>Formación extracurricular</strong><small>Experiencias fuera del aula</small></span><b>↗</b></button>
+            <button class="category-card cat-certs" data-section="certificados"><span class="category-symbol">✧</span><span><strong>Certificados</strong><small>Cursos y reconocimientos</small></span><b>↗</b></button>
+          </div>
+
+          <div class="section-heading recent-heading">
+            <div><span class="eyebrow">ACTIVIDAD RECIENTE</span><h2>Últimas evidencias</h2></div>
+            <button class="text-button" id="seeAll">Ver todas →</button>
+          </div>
+          <div class="evidence-list" id="recentList"></div>
+        </section>
+
+        <section class="view" id="view-cientifica">
+          <div class="page-intro intro-science"><span class="intro-icon">⚗</span><div><span class="eyebrow">ÁREA DE CONOCIMIENTO</span><h1>Evidencia científica</h1><p>Investigaciones, experimentos, proyectos y descubrimientos.</p></div></div>
+          <div class="section-toolbar"><div><h2>Mis evidencias</h2><p>Todo lo que has documentado en esta categoría.</p></div><button class="primary-button add-category" data-category="cientifica">＋ Agregar evidencia</button></div>
+          <div class="evidence-list" id="list-cientifica"></div>
+        </section>
+
+        <section class="view" id="view-academica">
+          <div class="page-intro intro-academic"><span class="intro-icon">▤</span><div><span class="eyebrow">APRENDIZAJE Y DESARROLLO</span><h1>Formación académica</h1><p>Trabajos, prácticas, proyectos y actividades de tu formación.</p></div></div>
+          <div class="section-toolbar"><div><h2>Mis evidencias</h2><p>Todo lo que has documentado en esta categoría.</p></div><button class="primary-button add-category" data-category="academica">＋ Agregar evidencia</button></div>
+          <div class="evidence-list" id="list-academica"></div>
+        </section>
+
+        <section class="view" id="view-extracurricular">
+          <div class="page-intro intro-extra"><span class="intro-icon">♧</span><div><span class="eyebrow">EXPERIENCIAS Y PARTICIPACIÓN</span><h1>Formación extracurricular</h1><p>Actividades, talleres, voluntariado, deportes y experiencias personales.</p></div></div>
+          <div class="section-toolbar"><div><h2>Mis evidencias</h2><p>Todo lo que has documentado en esta categoría.</p></div><button class="primary-button add-category" data-category="extracurricular">＋ Agregar evidencia</button></div>
+          <div class="evidence-list" id="list-extracurricular"></div>
+        </section>
+
+        <section class="view" id="view-certificados">
+          <div class="page-intro intro-certs"><span class="intro-icon">✧</span><div><span class="eyebrow">LOGROS Y RECONOCIMIENTOS</span><h1>Certificados</h1><p>Conserva tus constancias, diplomas y acreditaciones.</p></div></div>
+          <div class="section-toolbar"><div><h2>Mis certificados</h2><p>Consulta tus reconocimientos en un solo lugar.</p></div><button class="primary-button add-category" data-category="certificados">＋ Agregar certificado</button></div>
+          <div class="evidence-list" id="list-certificados"></div>
+        </section>
+
+        <section class="view" id="view-perfil">
+          <div class="page-intro intro-profile"><span class="intro-icon">◉</span><div><span class="eyebrow">DATOS PERSONALES</span><h1>Mi perfil</h1><p>Administra la información que aparece en tu espacio.</p></div></div>
+          <div class="profile-card">
+            <div class="profile-top"><div class="profile-avatar" id="profileInitial">S</div><div><h2 id="profileNamePreview">Mi perfil</h2><p>Información del usuario</p></div></div>
+            <form id="profileForm" class="profile-form">
+              <label>Nombre completo<input id="profileName" type="text" placeholder="Escribe tu nombre"></label>
+              <label>Correo electrónico<input id="profileEmail" type="email" placeholder="nombre@correo.com"></label>
+              <label>Teléfono<input id="profilePhone" type="tel" placeholder="Tu número de contacto"></label>
+              <label>Institución educativa<input id="profileSchool" type="text" placeholder="Nombre de tu institución"></label>
+              <div class="form-actions"><span id="profileSaved" class="save-message" aria-live="polite"></span><button class="primary-button" type="submit">Guardar cambios</button></div>
+            </form>
+          </div>
+          <p class="privacy-footnote">Esta versión guarda la información en el almacenamiento local de este navegador. No compartas datos sensibles ni documentos de identidad en una página pública.</p>
+        </section>
+      </div>
+    </main>
+  </div>
+
+  <nav class="mobile-nav" aria-label="Navegación móvil">
+    <button class="mobile-nav-link active" data-section="inicio"><span>⌂</span><small>Inicio</small></button>
+    <button class="mobile-nav-link" data-section="cientifica"><span>⚗</span><small>Ciencia</small></button>
+    <button class="mobile-nav-link" data-section="academica"><span>▤</span><small>Académica</small></button>
+    <button class="mobile-nav-link" data-section="extracurricular"><span>♧</span><small>Extra</small></button>
+    <button class="mobile-nav-link" data-section="certificados"><span>✧</span><small>Logros</small></button>
+    <button class="mobile-nav-link" data-section="perfil"><span>◉</span><small>Perfil</small></button>
+  </nav>
+
+  <dialog class="modal" id="evidenceModal">
+    <form id="evidenceForm" class="modal-card">
+      <div class="modal-heading"><div><span class="eyebrow">NUEVO REGISTRO</span><h2 id="modalTitle">Agregar evidencia</h2></div><button type="button" class="close-modal" id="closeModal" aria-label="Cerrar">×</button></div>
+      <label>Nombre de la evidencia<input id="evidenceTitle" type="text" maxlength="70" placeholder="Ej. Proyecto de investigación" required></label>
+      <label>Categoría<select id="evidenceCategory" required><option value="cientifica">Evidencia científica</option><option value="academica">Formación académica</option><option value="extracurricular">Formación extracurricular</option><option value="certificados">Certificados</option></select></label>
+      <label>Fecha<input id="evidenceDate" type="date" required></label>
+      <label>Descripción<textarea id="evidenceDescription" rows="3" maxlength="300" placeholder="Agrega una breve descripción..."></textarea></label>
+      <label class="file-picker">Adjuntar archivo <span>PDF o imagen · máximo 1.5 MB</span><input id="evidenceFile" type="file" accept=".pdf,image/*"></label>
+      <p class="file-name" id="fileName">Ningún archivo seleccionado</p>
+      <p class="modal-error" id="modalError" role="alert"></p>
+      <div class="modal-actions"><button type="button" class="secondary-button" id="cancelModal">Cancelar</button><button type="submit" class="primary-button">Guardar evidencia</button></div>
+    </form>
+  </dialog>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <script src="js/app.js"></script>
+</body>
+</html>
