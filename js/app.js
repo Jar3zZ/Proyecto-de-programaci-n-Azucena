@@ -4,18 +4,21 @@ const CATEGORY_INFO = {
   extracurricular: { label: "Formación extracurricular", icon: "♧", tone: "sand" },
   certificados: { label: "Certificados", icon: "✧", tone: "rose" }
 };
+const USERS_KEY = "portalUsuarios_v1";
 const EVIDENCE_KEY = "portalEvidencias_v1";
 const PROFILE_KEY = "portalPerfil_v1";
-let evidences = readStorage(EVIDENCE_KEY, []);
-let profile = readStorage(PROFILE_KEY, {});
+let currentUser = null;
+let evidences = [];
+let profile = {};
 let selectedFileData = null;
 
 function readStorage(key, fallback) {
   try { return JSON.parse(localStorage.getItem(key)) ?? fallback; }
   catch { return fallback; }
 }
+function userStorageKey(baseKey) { return `${baseKey}_${currentUser?.email || "sin_usuario"}`; }
 function saveEvidences() {
-  try { localStorage.setItem(EVIDENCE_KEY, JSON.stringify(evidences)); return true; }
+  try { localStorage.setItem(userStorageKey(EVIDENCE_KEY), JSON.stringify(evidences)); return true; }
   catch { showToast("No se pudo guardar. Prueba con un archivo más pequeño."); return false; }
 }
 function showToast(message) {
@@ -173,10 +176,124 @@ document.getElementById("profileForm").addEventListener("submit", event => {
     phone: document.getElementById("profilePhone").value.trim(),
     school: document.getElementById("profileSchool").value.trim()
   };
-  localStorage.setItem(PROFILE_KEY, JSON.stringify(profile));
+  localStorage.setItem(userStorageKey(PROFILE_KEY), JSON.stringify(profile));
   updateProfilePreview();
   document.getElementById("profileSaved").textContent = "Cambios guardados en este navegador.";
   showToast("Perfil actualizado.");
 });
-loadProfile();
-renderAll();
+function showAuthMode(mode) {
+  const registering = mode === "register";
+  document.getElementById("loginForm").hidden = registering;
+  document.getElementById("registerForm").hidden = !registering;
+  document.getElementById("authTitle").textContent = registering ? "Crea tu cuenta" : "Bienvenido de nuevo";
+  document.getElementById("authSubtitle").textContent = registering ? "Regístrate para comenzar a organizar tus evidencias." : "Inicia sesión para consultar y organizar tus evidencias.";
+  document.getElementById("authSwitch").hidden = false;
+  document.getElementById("authSwitch").innerHTML = registering ? '¿Ya tienes una cuenta? <button type="button" id="showLogin">Iniciar sesión</button>' : '¿No tienes una cuenta? <button type="button" id="showRegister">Crear cuenta</button>';
+  document.getElementById("loginError").textContent = "";
+  document.getElementById("registerError").textContent = "";
+  const registerButton = document.getElementById("showRegister");
+  const loginButton = document.getElementById("showLogin");
+  if (registerButton) registerButton.addEventListener("click", () => showAuthMode("register"));
+  if (loginButton) loginButton.addEventListener("click", () => showAuthMode("login"));
+}
+function loadUserData() {
+  evidences = readStorage(userStorageKey(EVIDENCE_KEY), []);
+  profile = readStorage(userStorageKey(PROFILE_KEY), {});
+  if (!profile.name && currentUser?.name) profile.name = currentUser.name;
+  if (!profile.email && currentUser?.email) profile.email = currentUser.email;
+  document.body.classList.remove("logged-out");
+  document.getElementById("authScreen").hidden = true;
+  document.getElementById("appShell").hidden = false;
+  document.querySelector(".mobile-nav").hidden = false;
+  loadProfile();
+  renderAll();
+}
+function enterApp(user) {
+  currentUser = user;
+  // La sesión solo vive mientras la página permanece abierta.
+  // La cuenta y las evidencias sí permanecen guardadas en este navegador.
+  loadUserData();
+  showToast(`Bienvenido/a, ${user.name || user.email}`);
+}
+async function hashPassword(password) {
+  if (globalThis.crypto?.subtle) {
+    const bytes = new TextEncoder().encode(password);
+    const digest = await crypto.subtle.digest("SHA-256", bytes);
+    return Array.from(new Uint8Array(digest)).map(byte => byte.toString(16).padStart(2, "0")).join("");
+  }
+  // Respaldo para pruebas locales; no sustituye un sistema de autenticación seguro.
+  return Array.from(password).reduce((hash, char) => Math.imul(hash ^ char.charCodeAt(0), 16777619), 2166136261).toString(16);
+}
+document.getElementById("showRegister").addEventListener("click", () => showAuthMode("register"));
+document.getElementById("loginForm").addEventListener("submit", async event => {
+  event.preventDefault();
+  const email = document.getElementById("loginEmail").value.trim().toLowerCase();
+  const password = document.getElementById("loginPassword").value;
+  const users = readStorage(USERS_KEY, {});
+  const user = users[email];
+  const error = document.getElementById("loginError");
+  if (!user || user.passwordHash !== await hashPassword(password)) {
+    error.textContent = "Correo o contraseña incorrectos. Verifica tus datos o crea una cuenta.";
+    return;
+  }
+  enterApp(user);
+});
+document.getElementById("registerForm").addEventListener("submit", async event => {
+  event.preventDefault();
+  const name = document.getElementById("registerName").value.trim();
+  const email = document.getElementById("registerEmail").value.trim().toLowerCase();
+  const password = document.getElementById("registerPassword").value;
+  const confirm = document.getElementById("registerConfirm").value;
+  const error = document.getElementById("registerError");
+  if (password.length < 6) { error.textContent = "La contraseña debe tener al menos 6 caracteres."; return; }
+  if (password !== confirm) { error.textContent = "Las contraseñas no coinciden."; return; }
+  const users = readStorage(USERS_KEY, {});
+  if (users[email]) { error.textContent = "Ya existe una cuenta con ese correo."; return; }
+  const user = { name, email, passwordHash: await hashPassword(password), created: Date.now() };
+  users[email] = user;
+  localStorage.setItem(USERS_KEY, JSON.stringify(users));
+  // Conserva los registros antiguos del proyecto al crear la primera cuenta.
+  if (Object.keys(users).length === 1) {
+    const oldEvidence = localStorage.getItem(EVIDENCE_KEY);
+    const oldProfile = localStorage.getItem(PROFILE_KEY);
+    if (oldEvidence && !localStorage.getItem(`${EVIDENCE_KEY}_${email}`)) {
+      localStorage.setItem(`${EVIDENCE_KEY}_${email}`, oldEvidence);
+      localStorage.removeItem(EVIDENCE_KEY);
+    }
+    if (oldProfile && !localStorage.getItem(`${PROFILE_KEY}_${email}`)) {
+      localStorage.setItem(`${PROFILE_KEY}_${email}`, oldProfile);
+      localStorage.removeItem(PROFILE_KEY);
+    }
+  }
+  enterApp(user);
+});
+document.getElementById("logoutButton").addEventListener("click", () => {
+  currentUser = null;
+  evidences = [];
+  profile = {};
+  document.getElementById("authScreen").hidden = false;
+  document.getElementById("appShell").hidden = true;
+  document.querySelector(".mobile-nav").hidden = true;
+  document.body.classList.add("logged-out");
+  document.getElementById("loginForm").reset();
+  showAuthMode("login");
+});
+function initAuth() {
+  document.body.classList.add("logged-out");
+  document.getElementById("appShell").hidden = true;
+  document.querySelector(".mobile-nav").hidden = true;
+  const users = readStorage(USERS_KEY, {});
+  const hasAccounts = Object.keys(users).length > 0;
+
+  if (hasAccounts) {
+    // Si ya existe una cuenta en este navegador, solicitar inicio de sesión.
+    showAuthMode("login");
+  } else {
+    // Primera visita: mostrar directamente el formulario para crear la cuenta.
+    showAuthMode("register");
+    document.getElementById("authTitle").textContent = "Crea tu primera cuenta";
+    document.getElementById("authSubtitle").textContent = "Registra tus datos para comenzar a organizar tus evidencias en este dispositivo.";
+    document.getElementById("authSwitch").hidden = true;
+  }
+}
+initAuth();

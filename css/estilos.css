@@ -43,3 +43,44 @@ button,input,textarea,select{font:inherit} button{cursor:pointer}
  .evidence-item{padding:11px;gap:9px}.evidence-type-icon{width:35px;height:35px}.evidence-info strong{font-size:11px}.item-actions{gap:4px}.small-action{padding:6px;font-size:9px}.profile-card{padding:18px}.profile-form{grid-template-columns:1fr;gap:13px}.form-actions{grid-column:1;align-items:flex-start;gap:10px;flex-direction:column}.mobile-nav{position:fixed;bottom:0;left:0;right:0;z-index:10;display:flex;justify-content:space-around;gap:0;padding:8px 4px max(8px,env(safe-area-inset-bottom));background:#fff;border-top:1px solid var(--line);box-shadow:0 -7px 25px #2928240a}.mobile-nav-link{flex:1;display:grid;justify-items:center;gap:3px;border:0;background:transparent;color:#928b82;padding:3px 0}.mobile-nav-link span{font-size:18px;line-height:1.1}.mobile-nav-link small{font-size:8px}.mobile-nav-link.active{color:#5d4d3d}.mobile-nav-link.active span{color:#a18468}
 }
 @media(max-width:380px){.category-card{gap:7px;padding:10px}.category-card strong{font-size:9px}.category-card small{font-size:8px}.welcome-copy h1{font-size:26px}.mobile-nav-link small{font-size:7px}}
+
+
+/* Acceso y registro de usuarios (modo local de demostración) */
+.auth-screen{min-height:100vh;display:grid;place-items:center;padding:24px;background:radial-gradient(circle at 15% 15%,#eee7dd 0,transparent 35%),var(--paper)}
+.auth-card{width:min(440px,100%);background:#fff;border:1px solid var(--line);border-radius:22px;padding:34px;box-shadow:0 20px 60px #29282412}
+.auth-brand{display:flex;align-items:center;gap:12px;margin-bottom:38px;font-family:Manrope,sans-serif;font-weight:800;font-size:15px;line-height:1.2}
+.auth-brand small{display:block;font-size:12px;font-weight:600;color:#9a8b7b}
+.auth-heading{margin-bottom:24px}.auth-heading h1{font:800 27px Manrope,sans-serif;letter-spacing:-.8px;margin:8px 0}.auth-heading p{font-size:12px;color:#837d74;line-height:1.6;margin:0}
+.auth-form{display:grid;gap:15px}.auth-form[hidden]{display:none}.auth-form label{display:grid;gap:7px;font-size:11px;font-weight:700;color:#5b564e}.auth-form input{width:100%;border:1px solid #e8e4dd;border-radius:9px;padding:12px;background:#fcfbf9;color:#292824;font-size:12px;outline:none}.auth-form input:focus{border-color:#bca78f;box-shadow:0 0 0 3px #d5c2ae33}.auth-submit{width:100%;margin-top:3px}.auth-error{font-size:11px;color:#a33b32;margin:0;min-height:0;line-height:1.4}.auth-switch{text-align:center;font-size:11px;color:#817a71;margin:20px 0 0}.auth-switch button{border:0;background:none;color:#80674f;font-weight:800;padding:0 3px}.auth-disclaimer{font-size:9px;line-height:1.5;text-align:center;color:#a09a91;margin:22px 0 0}
+.logout-button{border:1px solid var(--line);background:#fff;border-radius:8px;padding:8px 10px;font-size:10px;color:#625d55}.logout-button:hover{background:#f7f4ef}
+body.logged-out .app-layout,body.logged-out .mobile-nav{display:none}
+@media(max-width:760px){.auth-card{padding:26px 22px}.auth-brand{margin-bottom:30px}.auth-heading h1{font-size:24px}.logout-button{font-size:9px;padding:7px 8px}}
+
+.auth-screen[hidden]{display:none}
+
+
+/* Control de pantallas de acceso: evita mostrar el portal detrás del formulario. */
+[hidden] { display: none !important; }
+.auth-screen {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  min-height: 100vh;
+  overflow-y: auto;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  background: radial-gradient(circle at 15% 15%, #eee7dd 0, transparent 35%), var(--paper, #f8f7f4);
+}
+.auth-card {
+  width: min(440px, 100%);
+  margin: auto;
+  background: #fff;
+  border: 1px solid var(--line, #ebe8e2);
+  border-radius: 22px;
+  padding: 34px;
+  box-shadow: 0 20px 60px rgba(41, 40, 36, .08);
+}
+.auth-form { display: grid; gap: 15px; }
+.auth-form[hidden], .auth-screen[hidden], #appShell[hidden], .mobile-nav[hidden] { display: none !important; }
+@media (max-width: 520px) { .auth-card { padding: 26px 22px; } }
